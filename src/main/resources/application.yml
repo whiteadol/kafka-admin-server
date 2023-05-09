@@ -1,0 +1,12 @@
+server:
+  port: 8090
+
+logging:
+  level:
+    root: info
+  file:
+    path: D:\\kafka\\logs
+
+kafka:
+  admin:
+    servers: localhost:9094
