@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.posod.kafkaadminserver.repository.TempDataRepository">
+
+	<insert id="save">
+		INSERT INTO temp_data
+		(enable, id, temp_avg, temp_center, temp_max, temp_min, temp_range_max, temp_range_min)
+		VALUES (#{Enable}, #{ID}, #{TempAvg}, #{TempCenter}, #{TempMax}, #{TempMin}, #{TempRangeMax}, #{TempRangeMin})
+		ON CONFLICT (id)
+			DO UPDATE
+			SET enable         = #{Enable},
+			    temp_avg       = #{TempAvg},
+			    temp_center    = #{TempCenter},
+			    temp_max       = #{TempMax},
+			    temp_min       = #{TempMin},
+			    temp_range_max = #{TempRangeMax},
+			    temp_range_min = #{TempRangeMin},
+			    reg_dt         = now()
+	</insert>
+</mapper>

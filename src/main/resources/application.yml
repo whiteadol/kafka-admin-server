@@ -1,12 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/KOT_EXAMPLE
+    username: postgres
+    password: qw1324qwqwqw
+
 server:
   port: 8090
 
 logging:
   level:
-    root: info
+    root: warn
   file:
     path: D:\\kafka\\logs
 
 kafka:
   admin:
     servers: localhost:9094
+
+mybatis:
+  mapper-locations: mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.posod.kafkaadminserver.dto.infiRay.dsd
