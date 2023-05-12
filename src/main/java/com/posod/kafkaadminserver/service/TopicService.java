@@ -4,13 +4,12 @@ import com.posod.kafkaadminserver.dto.Entry;
 import com.posod.kafkaadminserver.dto.Topic;
 import com.posod.kafkaadminserver.dto.request.ConfigModifyRequest;
 import com.posod.kafkaadminserver.dto.request.CreateTopicRequest;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.clients.admin.TopicDescription;
-import org.apache.kafka.clients.admin.TopicListing;
+import com.posod.kafkaadminserver.dto.request.PartitionModifyRequest;
+import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.config.ConfigResource;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,7 +53,7 @@ public class TopicService extends AbstractKafkaAdminClientService {
                 .thenApply(it -> it.entrySet().stream()
                         .collect(Collectors.toMap(Map.Entry::getKey, e -> {
                             TopicDescription topic = e.getValue();
-                            return new Topic(topic.name(), topic.topicId().toString());
+                            return new Topic(topic.name(), topic.topicId().toString(), topic.partitions().size());
                         }))
                 ).get();
     }
@@ -75,5 +74,17 @@ public class TopicService extends AbstractKafkaAdminClientService {
     public boolean updateConfig(String topicName, ConfigModifyRequest configModifyRequest) throws ExecutionException, InterruptedException {
         ConfigResource configResource = new ConfigResource(RESOURCE_TYPE, topicName);
         return this.configService.update(configResource, configModifyRequest.getConfig());
+    }
+
+    public boolean updatePartition(PartitionModifyRequest partitionModifyRequest) throws ExecutionException, InterruptedException {
+
+        Map<String, NewPartitions> counts = new HashMap<>();
+        counts.put(partitionModifyRequest.getTopicName(), NewPartitions.increaseTo(partitionModifyRequest.getNumPartitions()));
+
+        this.kafkaAdminClient.createPartitions(counts)
+                .all()
+                .get();
+
+        return true;
     }
 }

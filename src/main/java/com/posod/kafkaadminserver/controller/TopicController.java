@@ -5,6 +5,7 @@ import com.posod.kafkaadminserver.dto.Entry;
 import com.posod.kafkaadminserver.dto.Topic;
 import com.posod.kafkaadminserver.dto.request.ConfigModifyRequest;
 import com.posod.kafkaadminserver.dto.request.CreateTopicRequest;
+import com.posod.kafkaadminserver.dto.request.PartitionModifyRequest;
 import com.posod.kafkaadminserver.service.TopicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -55,5 +56,10 @@ public class TopicController {
     @GetMapping("topic-configs/{topicName}")
     List<Entry<String, String>> getTopicConfig(@PathVariable String topicName) throws ExecutionException, InterruptedException {
         return this.topicService.getConfig(topicName);
+    }
+
+    @PutMapping("/topics-partition")
+    boolean updatePartition(@RequestBody PartitionModifyRequest partitionModifyRequest) throws ExecutionException, InterruptedException {
+        return this.topicService.updatePartition(partitionModifyRequest);
     }
 }

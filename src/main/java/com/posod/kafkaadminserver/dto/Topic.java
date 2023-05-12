@@ -7,4 +7,5 @@ public class Topic {
 
     String name;
     String topicId;
+    int partitionCount;
 }
